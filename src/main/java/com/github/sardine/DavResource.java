@@ -21,8 +21,10 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -92,9 +94,17 @@ public class DavResource
 	 * @param response The response complex type of the multistatus
 	 * @throws java.net.URISyntaxException If parsing the href from the response element fails
 	 */
-	public DavResource(Response response) throws URISyntaxException
-	{
-		this.href = new URI(response.getHref().get(0));
+	public DavResource(Response response) throws URISyntaxException	{
+        URL url = null;
+        URI hrefURI = null;
+        try {
+            url = new URL(response.getHref().get(0));
+            hrefURI = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+        } catch (MalformedURLException e) {
+            // If it failed to create through URL try direct.
+            hrefURI = new URI(response.getHref().get(0));
+        }
+        this.href = hrefURI;
 		this.creation = SardineUtil.parseDate(this.getCreationDate(response));
 		this.modified = SardineUtil.parseDate(this.getModifiedDate(response));
 		this.contentType = this.getContentType(response);

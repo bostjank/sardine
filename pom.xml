@@ -7,7 +7,7 @@
 	<groupId>com.github.lookfirst</groupId>
 	<artifactId>sardine</artifactId>
 	<packaging>jar</packaging>
-	<version>5.0</version>
+	<version>5.0.1-SNAPSHOT</version>
 	<description>An easy to use webdav client for java</description>
 	<name>Sardine WEBDAV client</name>
 	<url>https://github.com/lookfirst/sardine</url>
@@ -18,9 +18,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:git@github.com:lookfirst/sardine.git</connection>
-		<developerConnection>scm:git:git@github.com:lookfirst/sardine.git</developerConnection>
-		<url>git@github.com:lookfirst/sardine.git</url>
+		<connection>scm:git:git@github.com:bostjank/sardine.git</connection>
+		<developerConnection>scm:git:git@github.com:bostjank/sardine.git</developerConnection>
+		<url>git@github.com:bostjank/sardine.git</url>
 	</scm>
 	<developers>
 		<developer>
@@ -29,19 +29,36 @@
 		<developer>
 			<name>David Kocher</name>
 		</developer>
+        <developer>
+            <name>Boštjan Kolar</name>
+        </developer>
 	</developers>
-	<distributionManagement>
-		<repository>
-			<id>nexus-releases</id>
-			<name>Nexus Release Repository</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-		</repository>
-		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>Sonatype Nexus snapshot repository</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+    <repositories>
+        <repository>
+            <id>src-nexus</id>
+            <url>http://src-nexus.src.si/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <repository>
+            <id>src-nexus</id>
+            <url>http://src-nexus.src.si/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>src-nexus</id>
+            <url>http://src-nexus.src.si/nexus/content/repositories/snapshots</url>
+            <!-- keep only last snapshot for this version on repository this setting
+                is ignored by Maven 3.x -->
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+    </distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
@@ -93,35 +110,6 @@
 			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>release-sign-artifacts</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.4</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
